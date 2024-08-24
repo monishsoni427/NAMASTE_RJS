@@ -3,6 +3,8 @@ import RestaurantCard from "./RestaurantCard";
 import { useState, useEffect } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import { RESTAURANT_DATA } from "../utils/constant";
+import useOnlineStatus from "../utils/useOnlineStatus";
 const Body = () => {
   //state variable - Super Power Variables
   const [listOfRestaurant, setListOfRestaurant] = useState([]);
@@ -15,25 +17,30 @@ const Body = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  if (listOfRestaurant.length === 0) {
-    <Shimmer />;
-  }
 
   const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=24.585445&lng=73.712479&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
+    const data = await fetch(RESTAURANT_DATA);
     const json = await data.json();
     console.log(json);
     //Optional Chaining
-    setListOfRestaurant(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-    setFilteredRestaurant(
-      json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
+  setListOfRestaurant(
+    json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+  );
+  setFilteredRestaurant(
+    json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+  );
   };
+  
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false) {
+    return (
+      <h1>Looks Like you are offline , plz check your internet Connection</h1>
+    );
+  }
 
+  if (listOfRestaurant.length === 0) {
+    return <Shimmer />;
+  }
   return (
     <div className="body">
       <div className="filter">
@@ -72,10 +79,12 @@ const Body = () => {
           </button>
         </div>
       </div>
-
       <div className="res-container">
         {filteredRestaurant.map((restaurant) => (
-          <Link key={restaurant.info.id} to={"/restaurants/" + restaurant.info.id}>
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurants/" + restaurant.info.id}
+          >
             <RestaurantCard key={restaurant.info.id} resData={restaurant} />
           </Link>
         ))}
