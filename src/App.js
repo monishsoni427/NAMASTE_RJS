@@ -16,7 +16,7 @@ import useOnlineStatus from "./utils/useOnlineStatus";
 // Dynamic bundling
 // lazy loading
 // on demand loading
-// dynamic import
+// dynamic import 
 
 const Grocery = lazy(() => import("./Components/Grocery"));
 

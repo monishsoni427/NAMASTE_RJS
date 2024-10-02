@@ -11,26 +11,26 @@ export const Header = () => {
     console.log("useEffect Render");
   }, [btnName]);
   return (
-    <div className="header">
+    <div className="flex justify-between bg-pink-100 shadow-lg m-2 sm:bg-yellow-100 lg:bg-green-100">
       <div className="logo-container">
-        <img src={LOGO_URL} className="logo" alt="image" />
+        <img src={LOGO_URL} className="w-56 h-24  " alt="image" />
       </div>
       <div className="nav-items">
-        <ul>
-          {onlineStatus? <li>Online✅</li> : <li>Offline🔴</li>}
-          <li>
+        <ul className="flex p-4 m-4">
+          {onlineStatus? <li className="px-4">Online✅</li> : <li className="px-4">Offline🔴</li>}
+          <li className="px-4">
             <Link to="/">Home</Link>
           </li>
-          <li>
+          <li className="px-4">
             <Link to="/about">About us</Link>
           </li>
-          <li>
+          <li className="px-4">
             <Link to="/contact">Contact us</Link>
           </li>
-          <li>
+          <li className="px-4">
             <Link to="/grocery">Grocery</Link>
           </li>
-          <li>Cart</li>
+          <li className="px-4">Cart</li>
           <button
             className="login"
             onClick={() => {
