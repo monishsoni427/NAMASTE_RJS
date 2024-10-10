@@ -2,30 +2,36 @@
 import { Component } from "react";
 import User from "./User";
 import UserClass from "./UserClass";
-
+import UserContext from "../utils/UserContext";
 class About extends Component {
   constructor(props) {
     super(props);
     this.state = {
           webseries: "By Monish"
     }
-    console.log("Parent Constructor")
+    // console.log("Parent Constructor")
   }
   
   componentDidMount(){
-    console.log("Parent ComponenDidMount ");
+    // console.log("Parent ComponenDidMount ");
     this.setState({
       webseries: "By AKshay Saini"
     })
   }
   componentDidUpdate(){
-    console.log("Parent Component Did Update")
+    // console.log("Parent Component Did Update")
   }
   render() {
     console.log("Parent render")
     return (
       <div>
         <h1>About Class Component</h1>
+        <div>
+          LoggedIn User 
+          <UserContext.Consumer>
+            {({loggedInUser})=> <h1 className="font-bold">{loggedInUser}</h1>}
+          </UserContext.Consumer>
+        </div>
         <h2>This is Namaste React {this.state.webseries}</h2>
         <UserClass name={"First"} location={"Dehradun class"} />
         {/* <UserClass name={"Second"} location={"Jaipur class"} /> */}

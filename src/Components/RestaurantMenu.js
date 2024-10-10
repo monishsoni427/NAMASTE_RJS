@@ -1,48 +1,53 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 // import { MENU_API } from "../utils/constant";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
-const RestaurantMenu =  () => {
-  // const [resInfo, setResInfo] = useState(null);
-
+import RestaurantCategory from "./RestaurantCategories";
+const RestaurantMenu = () => {
   const { resId } = useParams();
-  const resInfo =  useRestaurantMenu(resId);
-  console.log(resInfo);
-  // useEffect(() => {
-  //   fetchMenu();
-  // }, []);
 
-  // const fetchMenu = async () => {
-  //   const data = await fetch(MENU_API + resId);
+  const dummy = "Dummy Data";
 
-  //   const json = await data.json();
-  //   console.log(json);
-  //   setResInfo(json.data);
-  // };
+  const resInfo = useRestaurantMenu(resId);
 
+  const [showIndex, setShowIndex] = useState(null);
+
+  const handleShowIndex = (ind) => {
+    setShowIndex(ind);
+  };
   if (resInfo === null) return <Shimmer />;
   const { name, cuisines, costForTwoMessage } =
     resInfo?.cards[2]?.card?.card?.info;
 
   const { itemCards } =
     resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
-  console.log(itemCards);
+  console.log(resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR);
+
+  const categories =
+    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR.cards.filter(
+      (c) =>
+        c.card.card?.["@type"] ==
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
+  console.log(categories);
   return (
-    <div className="menu">
-      <h1>{name}</h1>
-      <p>
+    <div className="text-center">
+      <h1 className="font-bold m-6 text-2xl">{name}</h1>
+      <p className="font-bold text-lg">
         {cuisines.join(", ")} - {costForTwoMessage}
       </p>
-      <h3></h3>
-      <ul>
-        {itemCards.map((item) => (
-          <li>
-            {item.card.info.name} - Rs.
-            {item.card.info.price || item.card.info.defaultPrice}
-          </li>
-        ))}
-      </ul>
+      {/* Categories accordian */}
+      {categories.map((category, index) => (
+        <RestaurantCategory
+          key={category?.card?.card?.title}
+          data={category?.card?.card}
+          showItems={index == showIndex ? true : false}
+          setShowIndex={() => {
+            showIndex == index ? setShowIndex(null) : setShowIndex(index);
+          }}
+        />
+      ))}
     </div>
   );
 };

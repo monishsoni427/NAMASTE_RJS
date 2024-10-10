@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Body from "./Components/Body";
 import Header from "./Components/Header";
@@ -9,6 +9,7 @@ import Contact from "./Components/Contact";
 import Error from "./Components/Error";
 import RestaurantMenu from "./Components/RestaurantMenu";
 import useOnlineStatus from "./utils/useOnlineStatus";
+import UserContext from "./utils/UserContext";
 // import Grocery from "./Components/Grocery";
 
 //Chunking
@@ -16,22 +17,36 @@ import useOnlineStatus from "./utils/useOnlineStatus";
 // Dynamic bundling
 // lazy loading
 // on demand loading
-// dynamic import 
+// dynamic import
 
 const Grocery = lazy(() => import("./Components/Grocery"));
 
 const About = lazy(() => import("./Components/About"));
 
 const AppLayout = () => {
+  const [UserName, setUserName] = useState();
+  //Authentication
+  useEffect(() => {
+    //Make an API call and send UserName and Password
+    const data = {
+      name: "Akshay Saini",
+    };
+    setUserName(data.name);
+  }, []);
+
   const onlineStatus = useOnlineStatus();
 
   return (
-    <div className="app">
-      <>
-        <Header />
-        <Outlet />
-      </>
-    </div>
+    // outside the context provider => Use default value
+    <UserContext.Provider value={{ loggedInUser: UserName, setUserName }}>
+      {/* Akshay Saini  */}
+      <div className="app">
+        <>
+          <Header />
+          <Outlet />
+        </>
+      </div>
+    </UserContext.Provider>
   );
 };
 

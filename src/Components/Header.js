@@ -1,23 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import logo from "../../assets/smoking-burger.png";
 import { Link } from "react-router-dom";
 import { LOGO_URL } from "../utils/constant";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 export const Header = () => {
-  let [btnName, setBtnName] = useState("Login");
-  console.log("Header Render");
+  let [btnNameReact, setBtnNameReact] = useState("Login");
+
   const onlineStatus = useOnlineStatus();
-  useEffect(() => {
-    console.log("useEffect Render");
-  }, [btnName]);
+
+  const {loggedInUser} = useContext(UserContext);
+
+  console.log(loggedInUser);  
+
   return (
     <div className="flex justify-between bg-pink-100 shadow-lg m-2 sm:bg-yellow-100 lg:bg-green-100">
       <div className="logo-container">
-        <img src={LOGO_URL} className="w-56 h-24  " alt="image" />
+        <img src={LOGO_URL} className="w-56 h-24 " alt="image" />
       </div>
       <div className="nav-items">
         <ul className="flex p-4 m-4">
-          {onlineStatus? <li className="px-4">Online✅</li> : <li className="px-4">Offline🔴</li>}
+          {onlineStatus ? (
+            <li className="px-4">Online✅</li>
+          ) : (
+            <li className="px-4">Offline🔴</li>
+          )}
           <li className="px-4">
             <Link to="/">Home</Link>
           </li>
@@ -35,11 +42,12 @@ export const Header = () => {
             className="login"
             onClick={() => {
               // setBtnName(btnName=="Login"?"Logout":"Login")
-              btnName === "Login" ? setBtnName("Logout") : setBtnName("Login");
+              btnNameReact === "Login" ? setBtnNameReact("Logout") : setBtnNameReact("Login");
             }}
           >
-            {btnName}
+            {btnNameReact}
           </button>
+          <li className="px-4 font-bold">{loggedInUser}</li>
         </ul>
       </div>
     </div>

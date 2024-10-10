@@ -1,18 +1,20 @@
 import React, { useState } from "react";
-import RestaurantCard from "./RestaurantCard";
-import { useState, useEffect } from "react";
+import RestaurantCard, { withPromotedLabel } from "./RestaurantCard";
+import { useState, useEffect, useContext } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { RESTAURANT_DATA } from "../utils/constant";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 const Body = () => {
   //state variable - Super Power Variables
   const [listOfRestaurant, setListOfRestaurant] = useState([]);
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
+
   //Whenever state variables update , react triggers a reconciliation cycles(re-renders the component)
-  console.log("Body Rendered");
 
   useEffect(() => {
     fetchData();
@@ -21,23 +23,23 @@ const Body = () => {
   const fetchData = async () => {
     const data = await fetch(RESTAURANT_DATA);
     const json = await data.json();
-    console.log(json);
+
     //Optional Chaining
-  setListOfRestaurant(
-    json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-  );
-  setFilteredRestaurant(
-    json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-  );
+    setListOfRestaurant(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
+    setFilteredRestaurant(
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+    );
   };
-  
+
   const onlineStatus = useOnlineStatus();
   if (onlineStatus === false) {
     return (
       <h1>Looks Like you are offline , plz check your internet Connection</h1>
     );
   }
-
+  const {loggedInUser, setUserName } = useContext(UserContext);
   if (listOfRestaurant.length === 0) {
     return <Shimmer />;
   }
@@ -54,7 +56,7 @@ const Body = () => {
             }}
           />
           <button
-          className="px-4 py-2 m-4 bg-green-100 rounded-xl"
+            className="px-4 py-2 m-4 bg-green-100 rounded-xl"
             onClick={() => {
               //Filter the Restaurants Cards and update the UI
 
@@ -66,7 +68,7 @@ const Body = () => {
           >
             Search
           </button>
-          
+
           <button
             className="px-4 py-2 m-4 bg-gray-200  rounded-xl"
             onClick={() => {
@@ -79,16 +81,27 @@ const Body = () => {
           >
             TOP Rated Restaurants
           </button>
-          
+          <div className="px-4 py-2 m-4 bg-gray-200  rounded-xl">
+            <label>UserName </label>
+            <input
+              className="border border-black p-2"
+              value={loggedInUser}
+              onChange={(e) => setUserName(e.target.value)}
+            />
+          </div>
         </div>
       </div>
-      <div className="flex flex-wrap" >
+      <div className="flex flex-wrap">
         {filteredRestaurant.map((restaurant) => (
           <Link
             key={restaurant.info.id}
             to={"/restaurants/" + restaurant.info.id}
           >
-            <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+            {restaurant.info.isOpen ? (
+              <RestaurantCardPromoted resData={restaurant} />
+            ) : (
+              <RestaurantCard resData={restaurant} />
+            )}
           </Link>
         ))}
       </div>
