@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ItemList from "./ItemList";
 const RestaurantCategory = ({ data, showItems, setShowIndex }) => {
   const handleClick = () => {
+    
     setShowIndex();
   };
   return (
@@ -18,7 +19,7 @@ const RestaurantCategory = ({ data, showItems, setShowIndex }) => {
 
           <span>⬇️</span>
         </div>
-        {showItems && <ItemList items={data.itemCards} />}
+        {showItems && <ItemList items={data.itemCards} category = {true} />}
       </div>
       {/* Accordian Body */}
     </div>

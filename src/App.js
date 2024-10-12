@@ -10,6 +10,9 @@ import Error from "./Components/Error";
 import RestaurantMenu from "./Components/RestaurantMenu";
 import useOnlineStatus from "./utils/useOnlineStatus";
 import UserContext from "./utils/UserContext";
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore";
+import Cart from "./Components/Cart";
 // import Grocery from "./Components/Grocery";
 
 //Chunking
@@ -37,16 +40,17 @@ const AppLayout = () => {
   const onlineStatus = useOnlineStatus();
 
   return (
-    // outside the context provider => Use default value
-    <UserContext.Provider value={{ loggedInUser: UserName, setUserName }}>
-      {/* Akshay Saini  */}
-      <div className="app">
-        <>
-          <Header />
-          <Outlet />
-        </>
-      </div>
-    </UserContext.Provider>
+    <Provider store={appStore}>
+     
+      <UserContext.Provider value={{ loggedInUser: UserName, setUserName }}>
+        <div className="app">
+          <>
+            <Header />
+            <Outlet />
+          </>
+        </div>
+      </UserContext.Provider>
+    </Provider>
   );
 };
 
@@ -83,6 +87,10 @@ const appRouter = createBrowserRouter([
         path: "/restaurants/:resId",
         element: <RestaurantMenu />,
       },
+      {
+        path: "/cart",
+        element: <Cart/>
+      }
     ],
     errorElement: <Error />,
   },

@@ -5,7 +5,6 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { RESTAURANT_DATA } from "../utils/constant";
 import useOnlineStatus from "../utils/useOnlineStatus";
-import UserContext from "../utils/UserContext";
 const Body = () => {
   //state variable - Super Power Variables
   const [listOfRestaurant, setListOfRestaurant] = useState([]);
@@ -39,7 +38,6 @@ const Body = () => {
       <h1>Looks Like you are offline , plz check your internet Connection</h1>
     );
   }
-  const {loggedInUser, setUserName } = useContext(UserContext);
   if (listOfRestaurant.length === 0) {
     return <Shimmer />;
   }
@@ -81,14 +79,7 @@ const Body = () => {
           >
             TOP Rated Restaurants
           </button>
-          <div className="px-4 py-2 m-4 bg-gray-200  rounded-xl">
-            <label>UserName </label>
-            <input
-              className="border border-black p-2"
-              value={loggedInUser}
-              onChange={(e) => setUserName(e.target.value)}
-            />
-          </div>
+          
         </div>
       </div>
       <div className="flex flex-wrap">
