@@ -5,6 +5,7 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { RESTAURANT_DATA } from "../utils/constant";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import UserContext from "../utils/UserContext";
 const Body = () => {
   //state variable - Super Power Variables
   const [listOfRestaurant, setListOfRestaurant] = useState([]);
@@ -13,7 +14,12 @@ const Body = () => {
 
   const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
 
+  const { loggedInUser,setUserName } = useContext(UserContext);
   //Whenever state variables update , react triggers a reconciliation cycles(re-renders the component)
+
+  const handleUserName = (name)=>{
+    setUserName(name)
+  }
 
   useEffect(() => {
     fetchData();
@@ -38,12 +44,13 @@ const Body = () => {
       <h1>Looks Like you are offline , plz check your internet Connection</h1>
     );
   }
+
   if (listOfRestaurant.length === 0) {
     return <Shimmer />;
   }
   return (
     <div className="body">
-      <div className="filter flex">
+      <div className="filter flex justify-between">
         <div className="search">
           <input
             type="text"
@@ -79,7 +86,14 @@ const Body = () => {
           >
             TOP Rated Restaurants
           </button>
-          
+
+          <lable>USERNAME</lable>
+          <input
+            name="myInput"
+            className="m-4 p-1 border-double border-2 border-blue-400 focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none"
+            value={loggedInUser}
+            onChange={(e)=>handleUserName(e.target.value)}
+          />
         </div>
       </div>
       <div className="flex flex-wrap">
